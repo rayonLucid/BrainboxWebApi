@@ -22,7 +22,7 @@ namespace BrainboxWebApi.Models
     {
       modelBuilder.Entity<ProductCart>()
               .Property(u => u.Amount)
-              .HasComputedColumnSql("[ProductQty] + [ProductPrice]");
+              .HasComputedColumnSql("[ProductQty] * [ProductPrice]");
       base.OnModelCreating(modelBuilder);
     }
     public virtual DbSet<ProductInformation> Product { get; set; }
