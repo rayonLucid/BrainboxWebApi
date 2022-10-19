@@ -60,8 +60,9 @@ namespace BrainboxWebApi.Controllers
 				}
 				[System.Web.Http.HttpPost]
 				[Microsoft.AspNetCore.Mvc.Route("NewProduct_Update")]
-				public HttpResponseMessage NewProduct_Update(ProductInformation product)
+				public string NewProduct_Update(ProductInformation product)
 				{
+			string	Result =string.Empty;
 						var query = db.Product.Where(x => x.ProductID == product.ProductID && x.ProductName == product.ProductName).FirstOrDefault();
 						// this search will prevent		Users from  adding products with same / similar name to the db
 						try {
@@ -71,8 +72,12 @@ namespace BrainboxWebApi.Controllers
 										if (ModelState.IsValid)
 										{
 												db.Product.Add(product);
+												db.SaveChanges();
+												Result="Product Successfully Created";
+										}else{
+										Result ="Model is not Valid Please check you input parameters";
 										}
-										db.SaveChanges();
+										
 								}
 								else
 								{
@@ -85,19 +90,19 @@ namespace BrainboxWebApi.Controllers
 										//		db.Product.Update(query);
 										db.Entry(query).State = EntityState.Modified;
 										db.SaveChanges();
-
+	           Result="Product Successfully Updated";
 								}
 
 						}
 						catch (Exception ex) {
 							
-							return new HttpResponseMessage(HttpStatusCode.ExpectationFailed);
+						Result =ex.Message;
 						}
 
 
 
 
-						return new HttpResponseMessage(HttpStatusCode.OK);
+						return Result;
 				}
 
 				[System.Web.Http.HttpPost]
