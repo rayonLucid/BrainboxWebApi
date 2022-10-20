@@ -10,7 +10,7 @@ using BrainboxWebApi.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+
 
 namespace BrainboxWebApi.Controllers
 {
@@ -22,9 +22,7 @@ namespace BrainboxWebApi.Controllers
 			
 				public ProductsController(DbConnection _db)
 				{
-			//			var configuration = new HttpConfiguration();
-			//			Request = new HttpRequestMessage();
-			//Request.SetConfiguration(configuration);
+		
 						db = _db;
 					
 				}
@@ -60,7 +58,7 @@ namespace BrainboxWebApi.Controllers
 				}
 				[System.Web.Http.HttpPost]
 				[Microsoft.AspNetCore.Mvc.Route("NewProduct_Update")]
-				public string NewProduct_Update(ProductInformation product)
+				public string NewProduct_Update([FromUri]ProductInformation product)
 				{
 			string	Result =string.Empty;
 						var query = db.Product.Where(x => x.ProductID == product.ProductID && x.ProductName == product.ProductName).FirstOrDefault();
@@ -105,11 +103,12 @@ namespace BrainboxWebApi.Controllers
 						return Result;
 				}
 
-				[System.Web.Http.HttpPost]
-				//User should be able to remove product from cart
+				[System.Web.Http.HttpDelete]
+				//User should be able to remove product
 				[Microsoft.AspNetCore.Mvc.Route("Product_Delete")]
-				public HttpResponseMessage Product_Delete(string productID)
+				public string Product_Delete(string productID)
 				{
+				string Result =string.Empty;
 						var query = db.Product.Where(x => x.ProductID == productID).FirstOrDefault();
 				
 						try
@@ -118,28 +117,28 @@ namespace BrainboxWebApi.Controllers
 								if (query == null)
 								{
 
-										//string result = string.Format("Product with the ID {0} Was not Found", productID);
+										string result = string.Format("Product with the ID {0} Was not Found Or has been deleted", productID);
 									
-										return new HttpResponseMessage(HttpStatusCode.NotFound);
+										Result =result;
 								}
 								else
 								{
 										//	db.Product.Remove(query);
 										db.Entry(query).State = EntityState.Deleted;
 										db.SaveChanges();
-
+            Result ="Product Successfully Deleted";
 								}
 
 						}
 						catch (Exception ex)
 						{
-							return new HttpResponseMessage(HttpStatusCode.ExpectationFailed);
+						Result =ex.Message;
 						}
 
 
 
 
-						return new HttpResponseMessage(HttpStatusCode.OK);
+						return Result;
 				}
 		}
 }

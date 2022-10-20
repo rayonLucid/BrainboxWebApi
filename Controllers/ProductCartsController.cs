@@ -48,6 +48,7 @@ namespace BrainboxWebApi.Controllers
 
 
     [System.Web.Http.HttpGet]
+    [Microsoft.AspNetCore.Mvc.Route("CartProductPriceTotalSum")]
     public string CartProductPriceTotalSum(string cartgroupID)
     {
       var query =  db.Cart.Where(x => x.CartProductGroupID == cartgroupID).ToList();
@@ -57,7 +58,8 @@ namespace BrainboxWebApi.Controllers
 
 
     [System.Web.Http.HttpPost]
-    public string NewProductInCart(ProductCart productcart)
+    [Microsoft.AspNetCore.Mvc.Route("NewProductInCart")]
+    public string NewProductInCart([FromUri]ProductCart productcart)
     {
       string Result = "Product Added Successfully";
       var query = db.Cart.Where(x => x.CartRowID == productcart.CartRowID && x.ProductID == productcart.ProductID).FirstOrDefault();
@@ -81,6 +83,152 @@ namespace BrainboxWebApi.Controllers
       catch (Exception ex)
       {
         Result= ex.Message;
+      }
+
+
+
+
+      return Result;
+    }
+
+    [System.Web.Http.HttpDelete]
+    //User should be able to Check out product from cart
+    [Microsoft.AspNetCore.Mvc.Route("Cart_CheckOut")]
+    public string Cart_CheckOut(string cartgroupID)
+    {
+      string Result = string.Empty;
+      var query = db.Cart.Where(x => x.CartProductGroupID == cartgroupID).ToList();
+
+      try
+      {
+        if (query != null)
+        {
+
+          foreach (var item in query)
+          {
+            item.CheckedOut = true;
+            db.Entry(item).State = EntityState.Modified;
+            db.SaveChanges();
+          }
+
+
+
+
+          Result = "Product Successfully Checked Out";
+        }
+
+      }
+      catch (Exception ex)
+      {
+        Result = ex.Message;
+      }
+
+
+
+
+      return Result;
+    }
+
+
+    [System.Web.Http.HttpDelete]
+    //User should be able to Check out product from cart
+    [Microsoft.AspNetCore.Mvc.Route("CartItem_CheckOut")]
+    public string CartItem_CheckOut(string RowID)
+    {
+      string Result = string.Empty;
+      var query = db.Cart.Where(x => x.CartRowID == RowID).FirstOrDefault();
+
+      try
+      {
+
+          query.CheckedOut = true;
+
+          db.Entry(query).State = EntityState.Modified;
+          db.SaveChanges();
+          Result = "Product Successfully Checked Out";
+        
+
+      }
+      catch (Exception ex)
+      {
+        Result = ex.Message;
+      }
+
+
+
+
+      return Result;
+    }
+
+    [System.Web.Http.HttpDelete]
+    //User should be able to remove product from cart
+    [Microsoft.AspNetCore.Mvc.Route("CartItem_Delete")]
+    public string CartItem_Delete(string RowID)
+    {
+      string Result = string.Empty;
+      var query = db.Cart.Where(x =>  x.CartRowID== RowID).FirstOrDefault();
+
+      try
+      {
+
+        if (query == null)
+        {
+
+          string result = string.Format("Item Was not Found Or has been deleted");
+
+          Result = result;
+        }
+        else
+        {
+          //	db.Product.Remove(query);
+          db.Entry(query).State = EntityState.Deleted;
+          db.SaveChanges();
+          Result = "Product Successfully Deleted";
+        }
+
+      }
+      catch (Exception ex)
+      {
+        Result = ex.Message;
+      }
+
+
+
+
+      return Result;
+    }
+
+
+    [System.Web.Http.HttpDelete]
+    //User should be able to   Discard cart just in case you dont want any item in the cart and you dont want o keep deleting on item at a time
+    [Microsoft.AspNetCore.Mvc.Route("DiscardCart")]
+    public string DiscardCart(string cartgroupID)
+    {
+      string Result = string.Empty;
+      var query = db.Cart.Where(x => x.CartProductGroupID == cartgroupID).FirstOrDefault();
+
+      try
+      {
+
+        if (query == null)
+        {
+
+          string result = string.Format("Cart Item Was not Found Or has been deleted");
+
+          Result = result;
+        }
+        else
+        {
+          //	db.Product.Remove(query);
+          db.Entry(query).State = EntityState.Deleted;
+          db.SaveChanges();
+          Result = "Cart Successfully Discarded";
+        }
+
+      }
+      catch (Exception ex)
+      {
+        Result = ex.Message;
       }
 
 
