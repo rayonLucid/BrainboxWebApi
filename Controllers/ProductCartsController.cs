@@ -47,6 +47,31 @@ namespace BrainboxWebApi.Controllers
     }
 
 
+ [System.Web.Http.HttpGet]
+    // Users should be able to view products in their cart
+    [Microsoft.AspNetCore.Mvc.Route("GetProductsInCart")]
+    public IEnumerable<ProductInCart> GetProductsInCart(string cartgroupID)
+    {
+      var query = (from cart in db.Cart.Where(x =>x.CheckedOut==false && x.CartProductGroupID== cartgroupID).Distinct().ToArray()
+                   join prod in db.Product.Distinct().ToArray()
+                   on cart.ProductID.Trim() equals prod.ProductID.Trim()
+                   select new ProductInCart
+                   {
+                     ProductName = prod.ProductName,
+                     ProductID = prod.ProductID,
+                     CartQty = cart.ProductQty,
+                     ProductPrice =prod.Price,
+                     CartID = cart.CartProductGroupID,
+                     RowID =cart.CartRowID,
+                     CheckedOut =cart.CheckedOut,
+                     Amount =cart.Amount
+                   }).ToArray();
+                   
+     
+      return  query;
+    }
+
+
     [System.Web.Http.HttpGet]
     [Microsoft.AspNetCore.Mvc.Route("CartProductPriceTotalSum")]
     public string CartProductPriceTotalSum(string cartgroupID)

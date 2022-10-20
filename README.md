@@ -46,3 +46,9 @@ The Users of this API will can do the following :
     "checkedOut": false,
     "productPrice": 39.89
   }
+
+# Api Urls
+- GetAllProductsInCart : This displays all items
+- Cart_CheckOut : this checks out all items in a cart (Batch)
+ https://localhost:44305/ProductCarts/Cart_CheckOut?cartgroupID=Menshoe
+ 
