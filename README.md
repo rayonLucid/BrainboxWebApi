@@ -47,8 +47,80 @@ The Users of this API will can do the following :
     "productPrice": 39.89
   }
 
-# Api Urls
-- GetAllProductsInCart : This displays all items
+# Api Urls Product Information
+- GetAllProducts: Displays all products information
+  # Sample Url
+ https://localhost:44305/Products/GetAllProducts
+
+- GetProductsByNameOrCat: this allows users to get product in formation either by product name or Its category
+  # Sample Url
+ https://localhost:44305/Products/GetProductsByNameOrCat?value={string}
+
+- NewProduct_Update : Add to or Update  product information
+
+ # Sample Url
+ https://localhost:44305/Products/NewProduct_Update
+
+ sample data:
+  {
+    "productID": "AVpfHrJ6ilAPnD_01",
+    "productName": "Josmo Walking Shoes ",
+    "category": "All Men's Shoes",
+    "color": "Shady Brown",
+    "size": "Size 7. 5",
+    "price": 40.89,
+    "quantityInStock": 10
+  }
+- Product_Delete: Deletes product from the Product information table
+ # Sample Url
+ https://localhost:44305/Products/Product_Delete?productID={string}
+
+- -----------------------------------------------------------------------
+
+
+# Api Urls CART
+- GetAllProductsInCart : This displays all items in the cart
+ # Sample Url
+ https://localhost:44305/ProductCarts/GetAllProductsInCart
+ 
+
+- GetProductsInCart : This displays all item by the CartItemGroupID
+ # Sample Url
+ https://localhost:44305/ProductCarts/GetProductsInCart?cartgroupID=Menshoe
+
 - Cart_CheckOut : this checks out all items in a cart (Batch)
+ # Sample Url
  https://localhost:44305/ProductCarts/Cart_CheckOut?cartgroupID=Menshoe
+
+- CartItem_CheckOut: This checks out a single item in a cart
+ # Sample Url
+ https://localhost:44305/ProductCarts/CartItem_CheckOut?RowID={string}
+
+ - CartProductPriceTotalSum : This calculates the sum of all items in a cart.
+  # Sample Url
+ https://localhost:44305/ProductCarts/CartProductPriceTotalSum?cartgroupID=Menshoe
+
+- NewProductInCart: This is for adding new to product to the cart.
+  # Sample Url
+ https://localhost:44305/ProductCarts/NewProductInCart
+
+  the following is a sample of data passed this url:
+  {
+    "productID": "AVpfHrJ6ilAPnD_xVXOI",
+    "ProductQty": 1,
+    "CartProductGroupID": "Menshoe",
+    "checkedOut": false,
+    "productPrice": 39.89
+  }
+- CartItem_Delete: This deletes an item in a cart
+  # Sample Url
+ https://localhost:44305/ProductCarts/CartItem_Delete?RowID={string}
+
+ - DiscardCart: This deletes all item in a cart
+  # Sample Url
+ https://localhost:44305/ProductCarts/DiscardCart?cartgroupID={string}
+
+
+
+
  
